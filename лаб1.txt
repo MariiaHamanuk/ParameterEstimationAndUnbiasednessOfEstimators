@@ -1,0 +1,71 @@
+CUsersMariia Hamaniukcd Desktop
+
+CUsersMariia HamaniukDesktopmkdir FileManagementPractice
+
+CUsersMariia HamaniukDesktopcd FileManagementPractice
+
+CUsersMariia HamaniukDesktopFileManagementPracticemkdir Documents, Pictures, Code
+
+CUsersMariia HamaniukDesktopFileManagementPracticedir b a
+Code
+Documents
+Pictures
+
+CUsersMariia HamaniukDesktopFileManagementPracticecd Documents
+
+CUsersMariia HamaniukDesktopFileManagementPracticeDocumentsecho.  notes.txt
+
+CUsersMariia HamaniukDesktopFileManagementPracticeDocumentsecho I`m UCU student  notes.txt
+
+CUsersMariia HamaniukDesktopFileManagementPracticeDocumentstype notes.txt
+I`m UCU student
+
+CUsersMariia HamaniukDesktopFileManagementPracticeDocumentsdir b a
+notes.txt
+
+CUsersMariia HamaniukDesktopFileManagementPracticeDocumentscd..Pictures
+
+CUsersMariia HamaniukDesktopFileManagementPracticePicturesecho.  landscape.jpg
+
+CUsersMariia HamaniukDesktopFileManagementPracticePicturesdir b a
+landscape.jpg
+
+CUsersMariia HamaniukDesktopFileManagementPracticePicturesren landscape.jpg nature.jpg
+
+CUsersMariia HamaniukDesktopFileManagementPracticePicturesmove CUsersMariia HamaniukDesktopFileManagementPracticePicturesnature.jpg CUsersMariia HamaniukDesktopFileManagementPracticeCode
+        1 file(s) moved.
+
+CUsersMariia HamaniukDesktopFileManagementPracticePicturescd..Code
+
+CUsersMariia HamaniukDesktopFileManagementPracticeCodedir b a
+nature.jpg
+
+CUsersMariia HamaniukDesktopFileManagementPracticeCodecd..
+
+CUsersMariia HamaniukDesktopFileManagementPracticecopy CUsersMariia HamaniukDesktopFileManagementPracticeDocumentsnotes.txt CUsersMariia HamaniukDesktopFileManagementPracticeCode
+        1 file(s) copied.
+
+CUsersMariia HamaniukDesktopFileManagementPracticecd Code
+
+CUsersMariia HamaniukDesktopFileManagementPracticeCodedir b a
+nature.jpg
+notes.txt
+
+CUsersMariia HamaniukDesktopFileManagementPracticeCodecd..Documents
+
+CUsersMariia HamaniukDesktopFileManagementPracticeDocumentsdel notes.txt
+
+CUsersMariia HamaniukDesktopFileManagementPracticeDocumentscd..
+
+CUsersMariia HamaniukDesktopFileManagementPracticedir s b
+CUsersMariia HamaniukDesktopFileManagementPracticeCode
+CUsersMariia HamaniukDesktopFileManagementPracticeDocuments
+CUsersMariia HamaniukDesktopFileManagementPracticePictures
+CUsersMariia HamaniukDesktopFileManagementPracticeCodenature.jpg
+CUsersMariia HamaniukDesktopFileManagementPracticeCodenotes.txt
+
+CUsersMariia HamaniukDesktopFileManagementPracticecd..
+
+CUsersMariia HamaniukDesktoprd s q CUsersMariia HamaniukDesktopFileManagementPractice
+
+CUsersMariia HamaniukDesktopcd %USERPROFILE%

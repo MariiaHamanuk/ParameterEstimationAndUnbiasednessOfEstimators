@@ -1,0 +1,61 @@
+---
+title: "Lab 3 Hamaniuk-Horetska-Prohorov"
+output: html_notebook
+---
+
+```{r}
+install.packages("tinytex")
+tinytex::install_tinytex()
+```
+
+\
+Lab assignment 3
+Parameter estimation and Unbiasedness of Estimator
+
+Work breakdown:
+
+Roman Prohorov is doing Task1 and his efforts are 33.33 %.\
+Mariia Hamaniuk is doing Task2 and her efforts are 33.33 %.\
+Daryna Horetska is doing Task3 and summary and her efforts are 33.33 %.
+*Ctrl+Alt+I*.
+
+------------------------------------------------------------------------
+
+**Task 1**
+
+**Problem formulation and discussion** (what is a reasonable question to discuss):
+**R code** with comments:
+
+```{r}
+
+```
+
+**The statistics obtained** (like sample mean or anything else you use to complete the task) as well as histograms
+**Justification** of your solution (e.g. refer to the corresponding theorems from probability theory);
+**Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations).
+
+------------------------------------------------------------------------
+
+**Task 2**
+
+**Problem formulation and discussion** (what is a reasonable question to discuss): \
+**R code** with comments:
+
+```{r}
+```
+
+**The statistics obtained** (like sample mean or anything else you use to complete the task) as well as histograms\
+**Justification** of your solution (e.g. refer to the corresponding theorems from probability theory); **Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations).
+
+------------------------------------------------------------------------
+
+**Task 3**
+
+**Problem formulation and discussion** (what is a reasonable question to discuss): \
+**R code** with comments:
+
+```{r}
+```
+
+**The statistics obtained** (like sample mean or anything else you use to complete the task) as well as histograms \
+**Justification** of your solution (e.g. refer to the corresponding theorems from probability theory); **Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations).
