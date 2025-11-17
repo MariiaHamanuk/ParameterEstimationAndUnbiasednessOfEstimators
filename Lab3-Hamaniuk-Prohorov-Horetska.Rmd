@@ -38,14 +38,473 @@ Daryna Horetska is doing Task3 and summary and her efforts are 33.33 %.
 
 **Task 2**
 
-**Problem formulation and discussion** (what is a reasonable question to discuss): \
+**Problem formulation and discussion (what is a reasonable question to discuss):**
+1.  We have to verify that the interval estimates produced by known rules indeed contain the parameter with probability equal to the confidence level.
+2. We are given the Poisson distribution so E(X) = theta and Var(X) = theta, where theta > 0; That's shows us that we can use MME (MOM) to estimate unknown parameter theta (the estimator for theta = sample mean). Also later on we will see that we can apply CLT here which is useful.
+
+So the reasonable questions to discuss are:
+1. How good or how accurate the coverage is, do the confidence intervals really contains unknown parameter theta with claimed probability?
+2. Which of methods (2/3/4) that we are going to use will give us the best/ the most precise/the narrowest interval?
+3.  What will happen to intervals  if we change n (either make it large or small)?
 **R code** with comments:
 
 ```{r}
+#initialization of our variables
+id <- 36
+set.seed(id)
+theta <- id/10
+alpha_list <- c(0.1, 0.05, 0.01) # levels of alpha
+n <- c(30, 50, 100, 200) # sample sizes
+M <- 10000 #times to replicate
+```
+Part 2 from task 1:
+```{r}
+coverage2 <- matrix(0, nrow = length(n), ncol = length(alpha_list))
+avgLength2 <- matrix(0, nrow = length(n), ncol = length(alpha_list)) #avarage length of confidence intervals we just add them and devide on number of them
+sdLength2 <- matrix(0, nrow = length(n), ncol = length(alpha_list))
+
+for (i in 1:length(n)){
+  ni <- n[i]
+  #cat("sample size = ", ni, "\n")
+  samples <- matrix (rpois(ni * M, lambda = theta), nrow = ni, ncol = M) #just generatind n samples using rpois
+  sample_means <- colMeans(samples)
+  for (j in 1:length(alpha_list)){
+    alpha <- alpha_list[j]
+    confidenceLevel <- 1 - alpha
+    critical <- qnorm(1-alpha/2)
+    
+    err <- critical * sqrt(theta / ni)
+    lower <- sample_means - err
+    upper <- sample_means +err
+    
+    coverage <- mean((lower <= theta) & (theta <= upper))
+    lengths <- upper - lower
+    meanLength <- mean(lengths)
+    sdLengths <- sd(lengths)
+    
+    coverage2[i, j] <- coverage
+    avgLength2[i, j] <- meanLength
+    sdLength2[i, j] <- sdLengths
+
+#cat("confidence level = ", confidenceLevel * 100, "%\n")
+    #cat(sprintf("coverage probability: %.4f and expected: %.4f", coverage, confidenceLevel), "\n")
+    #cat("coverage error: ",abs(coverage - confidenceLevel) * 100, "\n")
+    #cat("mean critical interval length: ", meanLength, "\n")
+    #cat("SD of critical length  ", sdLengths, "\n")
+    #cat("сritical value ", critical, "\n\n")
+  }
+}
+```
+part 3 from task 1 
+
+
+```{r}
+coverage3 <- matrix(0, nrow = length(n), ncol = length(alpha_list))
+avgLength3 <- matrix(0, nrow = length(n), ncol = length(alpha_list)) #avarage length of confidence intervals we just add them and devide on number of them
+sdLength3 <- matrix(0, nrow = length(n), ncol = length(alpha_list))
+
+for (i in 1:length(n)) {
+  ni <- n[i]
+  #cat("sample size =", ni, "\n")
+  
+  samples <- matrix(rpois(ni * M, lambda = theta), nrow = ni, ncol = M)
+  sample_means <- colMeans(samples)
+  
+  for (j in 1:length(alpha_list)) {
+    alpha <- alpha_list[j]
+    confidenceLevel <- 1 - alpha
+    critical <- qnorm(1 - alpha/2)
+    
+    a <- 1
+    b <- -(2 * sample_means + critical^2 /ni)
+    c <- sample_means^2
+    
+    discriminant <- b^2 - 4 * a * c
+    
+    lower <- (-b - sqrt(discriminant)) / (2 * a)
+    upper <- (-b + sqrt(discriminant)) / (2 * a)
+    
+
+    coverage <- mean((lower <= theta) & (theta <= upper))
+    lengths <- upper - lower
+    meanLength <- mean(lengths)
+    sdLength <- sd(lengths)
+    
+    coverage3[i, j] <- coverage
+    avgLength3[i, j] <- meanLength
+    sdLength3[i, j] <- sdLength
+    
+    #cat("confidence level = ", confidenceLevel * 100, "%\n")
+    #cat(sprintf("coverage probability: %.4f and expected: %.4f", coverage, confidenceLevel), "\n")
+    #cat("coverage error: ", abs(coverage - confidenceLevel) * 100, "\n")
+    #cat("mean critical interval length: ", meanLength, "\n")
+    #cat("SD of critical length  ", sdLength, "\n")
+    #cat("сritical value ", critical, "\n\n")
+  }
+}
 ```
 
-**The statistics obtained** (like sample mean or anything else you use to complete the task) as well as histograms\
-**Justification** of your solution (e.g. refer to the corresponding theorems from probability theory); **Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations).
+part 4 from task 1
+```{r}
+coverage4 <- matrix(0, nrow = length(n), ncol = length(alpha_list))
+avgLength4 <- matrix(0, nrow = length(n), ncol = length(alpha_list)) #avarage length of confidence intervals we just add them and devide on number of them
+sdLength4 <- matrix(0, nrow = length(n), ncol = length(alpha_list))
+for (i in 1:length(n)) {
+  ni <- n[i]
+  #cat("sample size =", ni, "\n")
+
+  samples <- matrix(rpois(ni * M, lambda = theta), nrow = ni, ncol = M)
+  sample_means <- colMeans(samples)
+  sample_sds <- apply(samples, 2, sd)
+  
+  for (j in 1:length(alpha_list)) {
+    alpha <- alpha_list[j]
+    confidenceLevel <- 1 - alpha
+    critical <- qt(1 - alpha/2, df = ni - 1)
+
+    error <- critical * sample_sds / sqrt(ni)
+    lower <- sample_means - error
+    upper <- sample_means + error
+
+    coverage <- mean((lower <= theta) & (theta <= upper))
+    lengths <- upper - lower
+    meanLength <- mean(lengths)
+    sdLength <- sd(lengths)
+    
+    coverage4[i, j] <- coverage
+    avgLength4[i, j] <- meanLength
+    sdLength4[i, j] <- sdLength
+    #cat("confidence level = ", confidenceLevel * 100, "%\n")
+    #cat(sprintf("coverage probability: %.4f and expected: %.4f", coverage, confidenceLevel), "\n")
+    #cat("coverage error: ",abs(coverage - confidenceLevel) * 100, "\n")
+    #cat("mean critical interval length: ", meanLength, "\n")
+    #cat("SD of critical length  ", sdLength, "\n")
+    #cat("сritical value ", critical, "\n\n")
+  }
+}
+
+```
+Analysis and comperasion:
+```{r}
+for (j in 1:length(alpha_list)) {
+  alpha <- alpha_list[j]
+  confidenceLevel <- 1 - alpha
+  comparison_df <- data.frame(
+    n = n,
+    Method2 = coverage2[, j],
+    Method3 = coverage3[, j],
+    Method4 = coverage4[, j],
+    M2_Error = abs(coverage2[, j] - confidenceLevel),
+    M3_Error = abs(coverage3[, j] - confidenceLevel),
+    M4_Error = abs(coverage4[, j] - confidenceLevel)
+  )
+  print(comparison_df, digits = 4)
+
+  length_df <- data.frame(
+    n = n,
+    Method2 = avgLength2[, j],
+    Method3 = avgLength3[, j],
+    Method4 = avgLength4[, j]
+  )
+  print(length_df, digits = 4)
+  
+  efficiency_df <- data.frame(
+    n = n,
+    Method2 = rep(1.0, length(n)),
+    Method3 = avgLength3[, j] / avgLength2[, j],
+    Method4 = avgLength4[, j] / avgLength2[, j]
+  )
+  print(efficiency_df, digits = 4)
+}
+```
+
+```{r}
+colors <- c("#E41A1C", "#377EB8", "#4DAF4A")
+method_names <- c("Method 2", "Method 3", "Method 4")
+
+par(mfrow = c(1, 1), mar = c(5, 5, 4, 2))
+j <- 1
+alpha <- alpha_list[j]
+conf_level <- 1 - alpha
+
+all_coverage <- c(coverage2[, j], coverage3[, j], coverage4[, j])
+y_min <- max(0.80, min(all_coverage) - 0.01)
+y_max <- min(1.00, max(all_coverage) + 0.01)
+
+plot(n, coverage2[, j], type = "n",
+     ylim = c(y_min, y_max),
+     xlab = "Sample size", 
+     ylab = "Coverage probability",
+     main = sprintf("%.0f%% Confidence Interval", 
+                    conf_level * 100),
+     panel.first = grid(col = "gray90", lty = 1),
+     cex.lab = 1.2, cex.main = 1.3, cex.axis = 1.1)
+
+abline(h = conf_level, lty = 2, col = "black", lwd = 2.5)
+
+lines(n, coverage2[, j], type = "b", pch = 19, col = colors[1], lwd = 2.5, cex = 1.4)
+lines(n, coverage3[, j], type = "b", pch = 17, col = colors[2], lwd = 2.5, cex = 1.4)
+lines(n, coverage4[, j], type = "b", pch = 15, col = colors[3], lwd = 2.5, cex = 1.4)
+
+legend("bottomright", 
+       legend = c(method_names, sprintf("Target (%.2f)", conf_level)),
+       col = c(colors, "black"), 
+       pch = c(19, 17, 15, NA), 
+       lty = c(1, 1, 1, 2), 
+       lwd = 2.5, 
+       bty = "n",
+       cex = 0.9)
+
+```
+
+```{r}
+par(mfrow = c(1, 1), mar = c(5, 5, 4, 2))
+j <- 2
+alpha <- alpha_list[j]
+conf_level <- 1 - alpha
+
+all_coverage <- c(coverage2[, j], coverage3[, j], coverage4[, j])
+y_min <- max(0.80, min(all_coverage) - 0.01)
+y_max <- min(1.00, max(all_coverage) + 0.01)
+
+plot(n, coverage2[, j], type = "n",
+     ylim = c(y_min, y_max),
+     xlab = "Sample Size", 
+     ylab = "Coverage Probability",
+     main = sprintf("%.0f%% Confidence Interval", 
+                    conf_level * 100),
+     panel.first = grid(col = "gray90", lty = 1),
+     cex.lab = 1.2, cex.main = 1.3, cex.axis = 1.1)
+
+abline(h = conf_level, lty = 2, col = "black", lwd = 2.5)
+
+lines(n, coverage2[, j], type = "b", pch = 19, col = colors[1], lwd = 2.5, cex = 1.4)
+lines(n, coverage3[, j], type = "b", pch = 17, col = colors[2], lwd = 2.5, cex = 1.4)
+lines(n, coverage4[, j], type = "b", pch = 15, col = colors[3], lwd = 2.5, cex = 1.4)
+
+legend("bottomright", 
+       legend = c(method_names, sprintf("Target (%.2f)", conf_level)),
+       col = c(colors, "black"), 
+       pch = c(19, 17, 15, NA), 
+       lty = c(1, 1, 1, 2), 
+       lwd = 2.5, 
+       bty = "n",
+       cex = 0.9)
+
+```
+
+```{r}
+par(mfrow = c(1, 1), mar = c(5, 5, 4, 2))
+j <- 3
+alpha <- alpha_list[j]
+conf_level <- 1 - alpha
+
+all_coverage <- c(coverage2[, j], coverage3[, j], coverage4[, j])
+y_min <- max(0.80, min(all_coverage) - 0.01)
+y_max <- min(1.00, max(all_coverage) + 0.01)
+
+plot(n, coverage2[, j], type = "n",
+     ylim = c(y_min, y_max),
+     xlab = "Sample Size", 
+     ylab = "Coverage Probability",
+     main = sprintf("%.0f%% Confidence Interval", conf_level * 100),
+     panel.first = grid(col = "gray90", lty = 1),
+     cex.lab = 1.2, cex.main = 1.3, cex.axis = 1.1)
+
+abline(h = conf_level, lty = 2, col = "black", lwd = 2.5)
+
+lines(n, coverage2[, j], type = "b", pch = 19, col = colors[1], lwd = 2.5, cex = 1.4)
+lines(n, coverage3[, j], type = "b", pch = 17, col = colors[2], lwd = 2.5, cex = 1.4)
+lines(n, coverage4[, j], type = "b", pch = 15, col = colors[3], lwd = 2.5, cex = 1.4)
+
+legend("bottomright", 
+       legend = c(method_names, sprintf("Target (%.2f)", conf_level)),
+       col = c(colors, "black"), 
+       pch = c(19, 17, 15, NA), 
+       lty = c(1, 1, 1, 2), 
+       lwd = 2.5, 
+       bty = "n",
+       cex = 0.9)
+
+```
+
+```{r}
+par(mfrow = c(1, 1), mar = c(5, 5, 4, 2))
+j <- 1
+alpha <- alpha_list[j]
+conf_level <- 1 - alpha
+
+all_lengths <- c(avgLength2[, j], avgLength3[, j], avgLength4[, j])
+y_max <- max(all_lengths) * 1.1
+
+plot(n, avgLength2[, j], type = "n",
+     ylim = c(0, y_max),
+     xlab = "Sample Size", 
+     ylab = "Mean Confidence Interval Length",
+     main = sprintf("%.0f%% Confidence Interval",conf_level * 100),
+     panel.first = grid(col = "gray90", lty = 1),
+     cex.lab = 1.2, cex.main = 1.3, cex.axis = 1.1)
+
+lines(n, avgLength2[, j], type = "b", pch = 19, col = colors[1], lwd = 2.5, cex = 1.4)
+lines(n, avgLength3[, j], type = "b", pch = 17, col = colors[2], lwd = 2.5, cex = 1.4)
+lines(n, avgLength4[, j], type = "b", pch = 15, col = colors[3], lwd = 2.5, cex = 1.4)
+
+legend("topright", 
+       legend = method_names,
+       col = colors, 
+       pch = c(19, 17, 15), 
+       lty = 1, 
+       lwd = 2.5,
+       bty = "n",
+       cex = 0.9)
+```
+
+```{r}
+par(mfrow = c(1, 1), mar = c(5, 5, 4, 2))
+j <- 2
+alpha <- alpha_list[j]
+conf_level <- 1 - alpha
+
+all_lengths <- c(avgLength2[, j], avgLength3[, j], avgLength4[, j])
+y_max <- max(all_lengths) * 1.1
+
+plot(n, avgLength2[, j], type = "n",
+     ylim = c(0, y_max),
+     xlab = "Sample Size", 
+     ylab = "Mean Confidence Interval Length",
+     main = sprintf("Mean CI Length: %.0f%% Confidence Interval", 
+                    conf_level * 100, alpha),
+     panel.first = grid(col = "gray90", lty = 1),
+     cex.lab = 1.2, cex.main = 1.3, cex.axis = 1.1)
+
+lines(n, avgLength2[, j], type = "b", pch = 19, col = colors[1], lwd = 2.5, cex = 1.4)
+lines(n, avgLength3[, j], type = "b", pch = 17, col = colors[2], lwd = 2.5, cex = 1.4)
+lines(n, avgLength4[, j], type = "b", pch = 15, col = colors[3], lwd = 2.5, cex = 1.4)
+
+legend("topright", 
+       legend = method_names,
+       col = colors, 
+       pch = c(19, 17, 15), 
+       lty = 1, 
+       lwd = 2.5,
+       bty = "n",
+       cex = 0.9)
+```
+
+```{r}
+par(mfrow = c(1, 1), mar = c(5, 5, 4, 2))
+j <- 3
+alpha <- alpha_list[j]
+conf_level <- 1 - alpha
+
+all_lengths <- c(avgLength2[, j], avgLength3[, j], avgLength4[, j])
+y_max <- max(all_lengths) * 1.1
+
+plot(n, avgLength2[, j], type = "n",
+     ylim = c(0, y_max),
+     xlab = "Sample Size (n)", 
+     ylab = "Mean Confidence Interval Length",
+     main = sprintf("Mean CI Length: %.0f%% Confidence Interval", 
+                    conf_level * 100),
+     panel.first = grid(col = "gray90", lty = 1),
+     cex.lab = 1.2, cex.main = 1.3, cex.axis = 1.1)
+
+lines(n, avgLength2[, j], type = "b", pch = 19, col = colors[1], lwd = 2.5, cex = 1.4)
+lines(n, avgLength3[, j], type = "b", pch = 17, col = colors[2], lwd = 2.5, cex = 1.4)
+lines(n, avgLength4[, j], type = "b", pch = 15, col = colors[3], lwd = 2.5, cex = 1.4)
+
+legend("topright", 
+       legend = method_names,
+       col = colors, 
+       pch = c(19, 17, 15), 
+       lty = 1, 
+       lwd = 2.5,
+       bty = "n",
+       cex = 0.9)
+```
+**The statistics obtained:**
+1. Sample mean
+2. Standard error
+3. Coverage
+4. Confidence interval
+5. Critical values 
+6. Sample variance (S^2)
+**Justification** of your solution (e.g. refer to the corresponding theorems from probability theory); 
+Part / method 2: normal approximation.    
+for large n by CLT we know that sample mean converges to normal distribution with parameters E(sample mean) = theta and Var(sample mean) = theta /n (we can say that because we say that X1, X2 ... Xn are iid rv) 
+$$\bar{X} -> N(\theta, \theta/n)$$
+converges in distribution.
+
+now we need to standardize it:
+$$Z = \frac{\bar{X} - \theta}{\frac{\sqrt{\theta}}{\sqrt{n}}} = \frac{(\bar{X} - \theta) * {\sqrt{n}}}{\sqrt{\theta}} \approx N(0, 1)$$
+Now let's construct our probability statement (with some confidence level 1 - a so out quantile or critical value will be some z with index a/2 also we can write lower bound with minus because we know that standard normal distribution is symmetrical with mean 0):
+$$P(-z_{a/2} <= \frac{(\bar{X} - \theta) * {\sqrt{n}}}{\sqrt{\theta}} <= z_{a/2}) = 1-a$$
+We need to express theta:
+$$P(|\bar{X} - \theta| <= z_{a/2} * \frac{\sqrt{\theta}}{\sqrt{n}}) = 1-a$$
+$$
+P(\bar{X} - z_{a/2} * \frac{\sqrt{\theta}}{\sqrt{n}} <= \theta <= \bar{X} + z_{a/2} *\frac{\sqrt{\theta}}{\sqrt{n}} ) = 1 - a
+$$
+which would be our critical region. But as we learned  we cannot have theta in the intervals because it cannot depend on it when we are estimating. 
+
+Part / method 3: Now we fully express theta and for this we use quadratic equation:
+
+$$|\bar{X} - \theta| <= z_{a/2} * \frac{\sqrt{\theta}}{\sqrt{n}}$$
+
+If I square both parts of the equation everything will be okay because we can do that with absolute value (squared values are always positive so we ensure that)
+$$(\bar{X} - \theta)^2 <= z_{a/2}^2 * \frac{\theta}{n}$$
+Now let`s expend our quadratic equation:
+$$\bar{X}^2 - 2*\theta*\bar{X} +\theta^2 <= z_{a/2}^2 * \frac{\theta}{n}$$
+$$\bar{X}^2 - 2*\theta*\bar{X} +\theta^2 - z_{a/2}^2 * \frac{\theta}{n} <= 0$$
+$$\theta^2 - (2\bar{X} + \frac{z_{a/2}^2}{n})* \theta + \bar{X}^2 <= 0$$
+$$
+D = b^2 - 4ac = (2\bar{X} + \frac{z_{a/2}^2}{n})^2 - 4 * 1 *  \bar{X}^2= 4\bar{X} + \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2} - 
+4\bar{X}$$
+$$ D = \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}$$
+$$
+\theta_1 = \frac{2\bar{X} + \frac{z_{a/2}^2}{n} - \sqrt{ \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}}}{2}
+$$  
+$$ \theta_2 = \frac{2\bar{X} + \frac{z_{a/2}^2}{n} + \sqrt{ \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}}}{2} $$
+$$
+P(\frac{2\bar{X} + \frac{z_{a/2}^2}{n} - \sqrt{ \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}}}{2}<=\theta<=\frac{2\bar{X} + \frac{z_{a/2}^2}{n} + \sqrt{ \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}}}{2})  = 1-a
+$$
+This is much better because we don't use theta in intervals for theta. And this method is much more stable for same reason.
+
+Part / method 4: 
+
+We don't know either variance (out unknown parameter theta) or standard deviation so we must find empirical sd or standard error which is sqrt of:
+$$S^2 = \frac{\sum_{i=1}^{n}(X_i - \bar{X})^2}{n-1}$$
+S^2 -> a.e theta by SLLN as n-> inf for Poisson(theta)
+$$
+\frac{\sqrt{n}(\bar{X}-\theta)}{s} \approx t_{n-1} (studentDistibutionWithN-1 Degrees Of Fredom)
+$$
+Now let's construct probability statement for some a < 0.5:
+$$
+P(-t_{n-1,a/2} <= 
+\frac{\sqrt{n}(\bar{X}-\theta)}{s} <= t_{n-1,a/2}) = 1-a
+$$
+$$
+P(\bar{X}-\frac{s* t_{n-1,a/2}}{\sqrt{n}} <= 
+\theta <= \bar{X}+ \frac{s* t_{n-1,a/2}}{\sqrt{n}}) = 1-a
+$$
+And this is last but not the least method: it uses in intervals only observed data.
+**Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations):
+
+The simulation results confirm the validity of the Central Limit Theorem (CLT) for the Poisson distribution with parameter theta = 3.6. As the sample size increases n -> 200 the coverage probability for all three methods converges to the nominal confidence levels 1 – alpha. This indicates that for n >= 30, the sampling distribution of the mean is sufficiently Gaussian to justify the use of normal-theory approximations.
+
+**Comparative interval length**
+
+**Method 2:** As expected, the interval constructed using the known variance  - theta produced the narrowest average length. However, this estimator is purely theoretical. 
+
+**Method 3 vs Method 4:** Method 3 is theoretically stronger because it builds the interval using the true Poisson definition (Variance = Mean). Method 4 'decouples' these two values by calculating the standard deviation independently, which adds unnecessary uncertainty in small samples
+
+**General conclusion:**
+
+For General Application  I would use method 4. The loss of precision compared to the exact Quadratic method is negligible for moderate-to-large samples, and the computational simplicity (using standard error) outweighs the algebraic complexity of solving quadratic roots.
+
+For High-Precision/Small Sample Scenarios: I would use method 3. It is the mathematically superior estimator as it relies on the pivotal quantity derived directly from the Poisson variance structure without introducing the additional variability of the sample standard deviation $S$.
+
+I would never / really rarely use method 2 or in something theoretical.
+**Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations).
 
 ------------------------------------------------------------------------
 
