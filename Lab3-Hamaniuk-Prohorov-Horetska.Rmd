@@ -1,16 +1,17 @@
 ---
 title: "Lab 3 Hamaniuk-Horetska-Prohorov"
 output: html_notebook
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r}
-install.packages("tinytex")
-tinytex::install_tinytex()
+
 ```
 
 \
-Lab assignment 3
-Parameter estimation and Unbiasedness of Estimator
+Lab assignment 3 Parameter estimation and Unbiasedness of Estimator
 
 Work breakdown:
 
@@ -23,30 +24,38 @@ Daryna Horetska is doing Task3 and summary and her efforts are 33.33 %.
 
 **Task 1**
 
-**Problem formulation and discussion** (what is a reasonable question to discuss):
-**R code** with comments:
+**Problem formulation and discussion** (what is a reasonable question to
+discuss): **R code** with comments:
 
 ```{r}
 
 ```
 
-**The statistics obtained** (like sample mean or anything else you use to complete the task) as well as histograms
-**Justification** of your solution (e.g. refer to the corresponding theorems from probability theory);
-**Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations).
+**The statistics obtained** (like sample mean or anything else you use
+to complete the task) as well as histograms **Justification** of your
+solution (e.g. refer to the corresponding theorems from probability
+theory); **Conclusion** (e.g. how reliable your answer is, if it agrees
+with common sense expectations).
 
 ------------------------------------------------------------------------
 
 **Task 2**
 
-**Problem formulation and discussion (what is a reasonable question to discuss):**
-1.  We have to verify that the interval estimates produced by known rules indeed contain the parameter with probability equal to the confidence level.
-2. We are given the Poisson distribution so E(X) = theta and Var(X) = theta, where theta > 0; That's shows us that we can use MME (MOM) to estimate unknown parameter theta (the estimator for theta = sample mean). Also later on we will see that we can apply CLT here which is useful.
+**Problem formulation and discussion (what is a reasonable question to
+discuss):** 1. We have to verify that the interval estimates produced by
+known rules indeed contain the parameter with probability equal to the
+confidence level. 2. We are given the Poisson distribution so E(X) =
+theta and Var(X) = theta, where theta \> 0; That's shows us that we can
+use MME (MOM) to estimate unknown parameter theta (the estimator for
+theta = sample mean). Also later on we will see that we can apply CLT
+here which is useful.
 
-So the reasonable questions to discuss are:
-1. How good or how accurate the coverage is, do the confidence intervals really contains unknown parameter theta with claimed probability?
-2. Which of methods (2/3/4) that we are going to use will give us the best/ the most precise/the narrowest interval?
-3.  What will happen to intervals  if we change n (either make it large or small)?
-**R code** with comments:
+So the reasonable questions to discuss are: 1. How good or how accurate
+the coverage is, do the confidence intervals really contains unknown
+parameter theta with claimed probability? 2. Which of methods (2/3/4)
+that we are going to use will give us the best/ the most precise/the
+narrowest interval? 3. What will happen to intervals if we change n
+(either make it large or small)? **R code** with comments:
 
 ```{r}
 #initialization of our variables
@@ -57,7 +66,9 @@ alpha_list <- c(0.1, 0.05, 0.01) # levels of alpha
 n <- c(30, 50, 100, 200) # sample sizes
 M <- 10000 #times to replicate
 ```
+
 Part 2 from task 1:
+
 ```{r}
 coverage2 <- matrix(0, nrow = length(n), ncol = length(alpha_list))
 avgLength2 <- matrix(0, nrow = length(n), ncol = length(alpha_list)) #avarage length of confidence intervals we just add them and devide on number of them
@@ -95,8 +106,8 @@ for (i in 1:length(n)){
   }
 }
 ```
-part 3 from task 1 
 
+part 3 from task 1
 
 ```{r}
 coverage3 <- matrix(0, nrow = length(n), ncol = length(alpha_list))
@@ -145,6 +156,7 @@ for (i in 1:length(n)) {
 ```
 
 part 4 from task 1
+
 ```{r}
 coverage4 <- matrix(0, nrow = length(n), ncol = length(alpha_list))
 avgLength4 <- matrix(0, nrow = length(n), ncol = length(alpha_list)) #avarage length of confidence intervals we just add them and devide on number of them
@@ -184,7 +196,9 @@ for (i in 1:length(n)) {
 }
 
 ```
+
 Analysis and comperasion:
+
 ```{r}
 for (j in 1:length(alpha_list)) {
   alpha <- alpha_list[j]
@@ -422,99 +436,163 @@ legend("topright",
        bty = "n",
        cex = 0.9)
 ```
-**The statistics obtained:**
-1. Sample mean
-2. Standard error
-3. Coverage
-4. Confidence interval
-5. Critical values 
-6. Sample variance (S^2)
-**Justification** of your solution (e.g. refer to the corresponding theorems from probability theory); 
-Part / method 2: normal approximation.    
-for large n by CLT we know that sample mean converges to normal distribution with parameters E(sample mean) = theta and Var(sample mean) = theta /n (we can say that because we say that X1, X2 ... Xn are iid rv) 
-$$\bar{X} -> N(\theta, \theta/n)$$
-converges in distribution.
+
+**The statistics obtained:** 1. Sample mean 2. Standard error 3.
+Coverage 4. Confidence interval 5. Critical values 6. Sample variance
+(S\^2) **Justification** of your solution (e.g. refer to the
+corresponding theorems from probability theory); Part / method 2: normal
+approximation.\
+for large n by CLT we know that sample mean converges to normal
+distribution with parameters E(sample mean) = theta and Var(sample mean)
+= theta /n (we can say that because we say that X1, X2 ... Xn are iid
+rv) $$\bar{X} -> N(\theta, \theta/n)$$ converges in distribution.
 
 now we need to standardize it:
 $$Z = \frac{\bar{X} - \theta}{\frac{\sqrt{\theta}}{\sqrt{n}}} = \frac{(\bar{X} - \theta) * {\sqrt{n}}}{\sqrt{\theta}} \approx N(0, 1)$$
-Now let's construct our probability statement (with some confidence level 1 - a so out quantile or critical value will be some z with index a/2 also we can write lower bound with minus because we know that standard normal distribution is symmetrical with mean 0):
+Now let's construct our probability statement (with some confidence
+level 1 - a so out quantile or critical value will be some z with index
+a/2 also we can write lower bound with minus because we know that
+standard normal distribution is symmetrical with mean 0):
 $$P(-z_{a/2} <= \frac{(\bar{X} - \theta) * {\sqrt{n}}}{\sqrt{\theta}} <= z_{a/2}) = 1-a$$
 We need to express theta:
 $$P(|\bar{X} - \theta| <= z_{a/2} * \frac{\sqrt{\theta}}{\sqrt{n}}) = 1-a$$
 $$
 P(\bar{X} - z_{a/2} * \frac{\sqrt{\theta}}{\sqrt{n}} <= \theta <= \bar{X} + z_{a/2} *\frac{\sqrt{\theta}}{\sqrt{n}} ) = 1 - a
-$$
-which would be our critical region. But as we learned  we cannot have theta in the intervals because it cannot depend on it when we are estimating. 
+$$ which would be our critical region. But as we learned we cannot have
+theta in the intervals because it cannot depend on it when we are
+estimating.
 
-Part / method 3: Now we fully express theta and for this we use quadratic equation:
+Part / method 3: Now we fully express theta and for this we use
+quadratic equation:
 
 $$|\bar{X} - \theta| <= z_{a/2} * \frac{\sqrt{\theta}}{\sqrt{n}}$$
 
-If I square both parts of the equation everything will be okay because we can do that with absolute value (squared values are always positive so we ensure that)
-$$(\bar{X} - \theta)^2 <= z_{a/2}^2 * \frac{\theta}{n}$$
-Now let`s expend our quadratic equation:
+If I square both parts of the equation everything will be okay because
+we can do that with absolute value (squared values are always positive
+so we ensure that)
+$$(\bar{X} - \theta)^2 <= z_{a/2}^2 * \frac{\theta}{n}$$ Now let\`s
+expend our quadratic equation:
 $$\bar{X}^2 - 2*\theta*\bar{X} +\theta^2 <= z_{a/2}^2 * \frac{\theta}{n}$$
 $$\bar{X}^2 - 2*\theta*\bar{X} +\theta^2 - z_{a/2}^2 * \frac{\theta}{n} <= 0$$
 $$\theta^2 - (2\bar{X} + \frac{z_{a/2}^2}{n})* \theta + \bar{X}^2 <= 0$$
 $$
 D = b^2 - 4ac = (2\bar{X} + \frac{z_{a/2}^2}{n})^2 - 4 * 1 *  \bar{X}^2= 4\bar{X} + \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2} - 
-4\bar{X}$$
-$$ D = \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}$$
+4\bar{X}$$ $$ D = \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}$$
 $$
 \theta_1 = \frac{2\bar{X} + \frac{z_{a/2}^2}{n} - \sqrt{ \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}}}{2}
-$$  
+$$\
 $$ \theta_2 = \frac{2\bar{X} + \frac{z_{a/2}^2}{n} + \sqrt{ \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}}}{2} $$
 $$
 P(\frac{2\bar{X} + \frac{z_{a/2}^2}{n} - \sqrt{ \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}}}{2}<=\theta<=\frac{2\bar{X} + \frac{z_{a/2}^2}{n} + \sqrt{ \frac{4\bar{X}z_{a/2}^2}{n} + \frac{z_{a/2}^4}{n^2}}}{2})  = 1-a
-$$
-This is much better because we don't use theta in intervals for theta. And this method is much more stable for same reason.
+$$ This is much better because we don't use theta in intervals for
+theta. And this method is much more stable for same reason.
 
-Part / method 4: 
+Part / method 4:
 
-We don't know either variance (out unknown parameter theta) or standard deviation so we must find empirical sd or standard error which is sqrt of:
-$$S^2 = \frac{\sum_{i=1}^{n}(X_i - \bar{X})^2}{n-1}$$
-S^2 -> a.e theta by SLLN as n-> inf for Poisson(theta)
-$$
+We don't know either variance (out unknown parameter theta) or standard
+deviation so we must find empirical sd or standard error which is sqrt
+of: $$S^2 = \frac{\sum_{i=1}^{n}(X_i - \bar{X})^2}{n-1}$$ S\^2 -\> a.e
+theta by SLLN as n-\> inf for Poisson(theta) $$
 \frac{\sqrt{n}(\bar{X}-\theta)}{s} \approx t_{n-1} (studentDistibutionWithN-1 Degrees Of Fredom)
-$$
-Now let's construct probability statement for some a < 0.5:
-$$
+$$ Now let's construct probability statement for some a \< 0.5: $$
 P(-t_{n-1,a/2} <= 
 \frac{\sqrt{n}(\bar{X}-\theta)}{s} <= t_{n-1,a/2}) = 1-a
-$$
-$$
+$$ $$
 P(\bar{X}-\frac{s* t_{n-1,a/2}}{\sqrt{n}} <= 
 \theta <= \bar{X}+ \frac{s* t_{n-1,a/2}}{\sqrt{n}}) = 1-a
-$$
-And this is last but not the least method: it uses in intervals only observed data.
-**Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations):
+$$ And this is last but not the least method: it uses in intervals only
+observed data. **Conclusion** (e.g. how reliable your answer is, if it
+agrees with common sense expectations):
 
-The simulation results confirm the validity of the Central Limit Theorem (CLT) for the Poisson distribution with parameter theta = 3.6. As the sample size increases n -> 200 the coverage probability for all three methods converges to the nominal confidence levels 1 – alpha. This indicates that for n >= 30, the sampling distribution of the mean is sufficiently Gaussian to justify the use of normal-theory approximations.
+The simulation results confirm the validity of the Central Limit Theorem
+(CLT) for the Poisson distribution with parameter theta = 3.6. As the
+sample size increases n -\> 200 the coverage probability for all three
+methods converges to the nominal confidence levels 1 – alpha. This
+indicates that for n \>= 30, the sampling distribution of the mean is
+sufficiently Gaussian to justify the use of normal-theory
+approximations.
 
 **Comparative interval length**
 
-**Method 2:** As expected, the interval constructed using the known variance  - theta produced the narrowest average length. However, this estimator is purely theoretical. 
+**Method 2:** As expected, the interval constructed using the known
+variance - theta produced the narrowest average length. However, this
+estimator is purely theoretical.
 
-**Method 3 vs Method 4:** Method 3 is theoretically stronger because it builds the interval using the true Poisson definition (Variance = Mean). Method 4 'decouples' these two values by calculating the standard deviation independently, which adds unnecessary uncertainty in small samples
+**Method 3 vs Method 4:** Method 3 is theoretically stronger because it
+builds the interval using the true Poisson definition (Variance = Mean).
+Method 4 'decouples' these two values by calculating the standard
+deviation independently, which adds unnecessary uncertainty in small
+samples
 
 **General conclusion:**
 
-For General Application  I would use method 4. The loss of precision compared to the exact Quadratic method is negligible for moderate-to-large samples, and the computational simplicity (using standard error) outweighs the algebraic complexity of solving quadratic roots.
+For General Application I would use method 4. The loss of precision
+compared to the exact Quadratic method is negligible for
+moderate-to-large samples, and the computational simplicity (using
+standard error) outweighs the algebraic complexity of solving quadratic
+roots.
 
-For High-Precision/Small Sample Scenarios: I would use method 3. It is the mathematically superior estimator as it relies on the pivotal quantity derived directly from the Poisson variance structure without introducing the additional variability of the sample standard deviation $S$.
+For High-Precision/Small Sample Scenarios: I would use method 3. It is
+the mathematically superior estimator as it relies on the pivotal
+quantity derived directly from the Poisson variance structure without
+introducing the additional variability of the sample standard deviation
+$S$.
 
 I would never / really rarely use method 2 or in something theoretical.
-**Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations).
+**Conclusion** (e.g. how reliable your answer is, if it agrees with
+common sense expectations).![](images/clipboard-1416556241.png)
 
 ------------------------------------------------------------------------
 
 **Task 3**
 
-**Problem formulation and discussion** (what is a reasonable question to discuss): \
+**Problem formulation and discussion** (what is a reasonable question to
+discuss):\
 **R code** with comments:
 
+![](images/clipboard-1416556241.png){width="546"}
+
 ```{r}
+id <- 36
+set.seed(id)
+N <- 100
+mu <- 10
+sigma_squared <- 4
+sigma <- sqrt(sigma_squared)
+dataset <- rnorm(N, mean = mu, sd = sigma)
+head(dataset)
+cat("Population Mean (mu):", mu, "\n")
+cat("Population Variance (sigma_squared):", sigma_squared, "\n")
+sample_mean <- mean(dataset)
+sample_variance <- var(dataset)
+biased_variance <- sum((dataset - mean(dataset))^2) / N
+cat("Sample Mean:", sample_mean, "\n")
+cat("Sample Variance:", sample_variance, "\n")
+cat("Variance:", biased_variance, "\n")
+
 ```
 
-**The statistics obtained** (like sample mean or anything else you use to complete the task) as well as histograms \
-**Justification** of your solution (e.g. refer to the corresponding theorems from probability theory); **Conclusion** (e.g. how reliable your answer is, if it agrees with common sense expectations).
+```{r}
+n_values <- c(10, 50, 100, 1000)
+for (n in n_values){
+  sigma_n_squared <- sum((dataset - sample_mean)^2)/n
+  cat("for n ", n, "sigma n squared", sigma_n_squared, "\n")
+  sigma_n_minus1_squared <- sum((dataset - sample_mean)^2)/(n-1)
+  cat("for n ", n, "sigma n-1  squared", sigma_n_minus1_squared, "\n")
+  
+  bias_sigma_n_squared <- sigma_n_squared - sigma_squared
+  cat("Bias for sigma n squared", bias_sigma_n_squared, "\n")
+  bias_sigma_n_minus1_squared <- sigma_n_minus1_squared - sigma_squared
+  cat("Bias for sigma n - 1 squared", bias_sigma_n_minus1_squared, "\n")
+}
+```
+
+```{r}
+
+```
+
+**The statistics obtained** (like sample mean or anything else you use
+to complete the task) as well as histograms\
+**Justification** of your solution (e.g. refer to the corresponding
+theorems from probability theory); **Conclusion** (e.g. how reliable
+your answer is, if it agrees with common sense expectations).
