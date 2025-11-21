@@ -1158,27 +1158,26 @@ discuss):\
 
 ```{r}
 id <- 36
-set.seed(id)
-N <- 100
+set.seed(36)
 mu <- 10
 sigma_squared <- 4
 sigma <- sqrt(sigma_squared)
-dataset <- rnorm(N, mean = mu, sd = sigma)
-head(dataset)
+
 cat("Population Mean (mu):", mu, "\n")
 cat("Population Variance (sigma_squared):", sigma_squared, "\n")
-sample_mean <- mean(dataset)
-sample_variance <- var(dataset)
-biased_variance <- sum((dataset - mean(dataset))^2) / N
-cat("Sample Mean:", sample_mean, "\n")
-cat("Sample Variance:", sample_variance, "\n")
-cat("Variance:", biased_variance, "\n")
 
 ```
 
 ```{r}
 n_values <- c(10, 50, 100, 1000)
 for (n in n_values){
+  dataset <- rnorm(n, mean = mu, sd = sigma)
+  head(dataset)
+  sample_mean <- mean(dataset)
+  sample_variance <- var(dataset)
+  cat("Sample Mean:", sample_mean, "\n")
+  cat("Sample Variance:", sample_variance, "\n")
+
   sigma_n_squared <- sum((dataset - sample_mean)^2)/n
   cat("for n ", n, "sigma n squared", sigma_n_squared, "\n")
   sigma_n_minus1_squared <- sum((dataset - sample_mean)^2)/(n-1)
@@ -1189,14 +1188,23 @@ for (n in n_values){
   bias_sigma_n_minus1_squared <- sigma_n_minus1_squared - sigma_squared
   cat("Bias for sigma n - 1 squared", bias_sigma_n_minus1_squared, "\n")
 }
-```
 
-```{r}
+As we can see for all ns the   $$ \hat\sigma_{n-1}^2 $$  and  $$ \hat\sigma_{n}^2 $$ is really close to actual variance (in my example it's 4).  For example, for n = 1000 it's 3.987485 that is do close to 4. 
 
-```
+ $$ \hat\sigma_{n-1}^2 $$  is pretty closer to the real value of variance in each case, but there is a small difference with biases: for all of ns they are so close to 0 (the greater n is, the greater convergency to 0 is + for n-1 we have unbiased estimator), but in over case for n = 100 there is some small difference (we have a tendency to > n -> bias is closer to 0, but it's differ here)
 
-**The statistics obtained** (like sample mean or anything else you use
-to complete the task) as well as histograms\
-**Justification** of your solution (e.g. refer to the corresponding
-theorems from probability theory); **Conclusion** (e.g. how reliable
-your answer is, if it agrees with common sense expectations).
+The best result is in 4th case (n = 1000) the worst – 3rd (n = 100)There is theoretical proof that $$ \hat\sigma_{n-1}^2  $$ is unbiased:
+
+$$
+E(\hat\sigma_n^2) = E\!\left( \frac{1}{n} \sum_{i=1}^n (X_i - \bar X)^2 \right) = \frac{1}{n} E(S_{xx}) = \frac{1}{n}(n-1)\sigma^2
+$$
+
+$$ E(\hat\sigma_{n-1}^2) = E\!\left( \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2 \right) = \frac{1}{n-1} E(S_{xx}) = \frac{1}{n-1}(n-1)\sigma^2 = \sigma^2 $$
+
+$$ \text{Bias}(\hat\sigma_n^2) = E(\hat\sigma_n^2) - \sigma^2 = \frac{n-1}{n}\sigma^2 - \sigma^2 = -\frac{\sigma^2}{n},\text{biased}
+$$
+
+$$ \text{Bias}(\hat\sigma_{n-1}^2) = E(\hat\sigma_{n-1}^2) - \sigma^2 = \sigma^2 - \sigma^2 = 0, \text{unbiased}
+$$
+
+So the main point is that we can use $$ \hat\sigma_{n-1}^2 $$ as unbiased estimator
