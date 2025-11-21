@@ -14,7 +14,6 @@ Work breakdown:
 Roman Prohorov is doing Task1 and his efforts are 33.33 %.\
 Mariia Hamaniuk is doing Task2 and her efforts are 33.33 %.\
 Daryna Horetska is doing Task3 and summary and her efforts are 33.33 %.
-*Ctrl+Alt+I*.
 
 ------------------------------------------------------------------------
 
@@ -596,6 +595,7 @@ The simulation results confirm the theoretical properties of confidence interval
 3. **Recommendation:**
 
 **For practical use with exponential data, I recommend Method 1 (Exact Chi-Squared)** because:
+
 - It provides exact coverage at all sample sizes
 - It produces the narrowest intervals (most efficient)
 - It is computationally straightforward to implement
@@ -603,12 +603,14 @@ The simulation results confirm the theoretical properties of confidence interval
 - It is the theoretically optimal choice for exponential distributions
 
 **For general statistical software or when the distribution is unknown/not exponential:**
+
 - Use **Method 4 (Student t)** - it's the most universal and reliable choice
 - It works well across all confidence levels and sample sizes
 - It's conservative (slightly wider intervals) but maintains proper coverage
 - It's the standard approach in statistical practice
 
 **Methods with limitations:**
+
 - **Method 2**: Cannot be used in practice because it requires knowing the true parameter $\theta$ to calculate
   the margin of error $(z_{\alpha/2} \cdot \theta/\sqrt{n})$. Since $\theta$ is unknown (it's what we're trying to estimate),
   this method is theoretically sound but practically impossible to implement. It serves as a benchmark
