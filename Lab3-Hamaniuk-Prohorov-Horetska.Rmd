@@ -1188,7 +1188,7 @@ for (n in n_values){
   bias_sigma_n_minus1_squared <- sigma_n_minus1_squared - sigma_squared
   cat("Bias for sigma n - 1 squared", bias_sigma_n_minus1_squared, "\n")
 }
-
+```
 As we can see for all ns the   $$ \hat\sigma_{n-1}^2 $$  and  $$ \hat\sigma_{n}^2 $$ is really close to actual variance (in my example it's 4).  For example, for n = 1000 it's 3.987485 that is do close to 4. 
 
  $$ \hat\sigma_{n-1}^2 $$  is pretty closer to the real value of variance in each case, but there is a small difference with biases: for all of ns they are so close to 0 (the greater n is, the greater convergency to 0 is + for n-1 we have unbiased estimator), but in over case for n = 100 there is some small difference (we have a tendency to > n -> bias is closer to 0, but it's differ here)
